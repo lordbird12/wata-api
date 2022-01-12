@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Mail\SendMail;
+use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -10,7 +11,6 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use Intervention\Image\Facades\Image;
-use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class Controller extends BaseController
 {
@@ -64,7 +64,7 @@ class Controller extends BaseController
 
     public function uploadImage($image, $path)
     {
-       
+
         $input['imagename'] = md5(rand(0, 999999) . $image->getClientOriginalName()) . '.' . $image->extension();
         $destinationPath = public_path('/thumbnail');
         if (!File::exists($destinationPath)) {
@@ -79,18 +79,24 @@ class Controller extends BaseController
         return $path . $input['imagename'];
     }
 
+    public function sendMail($email,$senderEmail, $data, $title, $type)
+    {
+
+        $mail = new SendMail($email,$senderEmail, $data, $title, $type);
+        Mail::to($email)->send($mail);
+    }
 
     public function getLastNumber()
     {
         $prefix = '0';
-        $id = IdGenerator::generate(['table' => 'users','field'=>'user_id', 'length' => 9, 'prefix' =>$prefix]);
+        $id = IdGenerator::generate(['table' => 'users', 'field' => 'user_id', 'length' => 9, 'prefix' => $prefix]);
         return $id;
     }
 
     public function getLastNumberOrders()
     {
         $prefix = '0';
-        $id = IdGenerator::generate(['table' => 'orders','field'=>'order_no', 'length' => 9, 'prefix' =>$prefix]);
+        $id = IdGenerator::generate(['table' => 'orders', 'field' => 'order_no', 'length' => 9, 'prefix' => $prefix]);
         return $id;
     }
 
