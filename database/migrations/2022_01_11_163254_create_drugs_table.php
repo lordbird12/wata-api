@@ -23,6 +23,10 @@ class CreateDrugsTable extends Migration
             $table->string('main_picture', 255)->charset('utf8')->nullable();
             $table->integer('price')->default(0)->nullable();
             $table->integer('discount')->default(0)->nullable();
+            $table->string('unit');
+            $table->integer('qty')->default(0)->nullable();
+            $table->string('create_by', 100)->charset('utf8')->nullable();
+            $table->string('update_by', 100)->charset('utf8')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

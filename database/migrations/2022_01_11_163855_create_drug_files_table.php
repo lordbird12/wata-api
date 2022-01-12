@@ -15,9 +15,11 @@ class CreateDrugFilesTable extends Migration
     {
         Schema::create('drug_files', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('product_id')->unsigned()->index();
+            $table->integer('drug_id')->unsigned()->index();
             $table->string('title')->charset('utf8');
             $table->string('path')->charset('utf8');
+            $table->string('create_by', 100)->charset('utf8')->nullable();
+            $table->string('update_by', 100)->charset('utf8')->nullable();
             $table->timestamps();
         });
     }

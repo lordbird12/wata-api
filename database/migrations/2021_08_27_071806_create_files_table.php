@@ -19,6 +19,8 @@ class CreateFilesTable extends Migration
             $table->string('user_id', 50)->charset('utf8');
             $table->string('title')->charset('utf8');
             $table->string('path')->charset('utf8');
+            $table->string('create_by', 100)->charset('utf8')->nullable();
+            $table->string('update_by', 100)->charset('utf8')->nullable();
             $table->timestamps();
         });
     }

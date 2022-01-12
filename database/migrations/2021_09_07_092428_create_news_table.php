@@ -19,6 +19,8 @@ class CreateNewsTable extends Migration
             $table->string('shot_detail');
             $table->mediumText('detail');
             $table->string('image');
+            $table->string('create_by', 100)->charset('utf8')->nullable();
+            $table->string('update_by', 100)->charset('utf8')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

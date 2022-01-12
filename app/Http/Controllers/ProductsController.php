@@ -17,7 +17,10 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        $products = Products::all();
+        $products = Products::with('product_files')
+            ->get()
+            ->toarray();
+
         if ($products) {
             foreach ($products as &$value) {
                 $value['main_picture'] =  url($value['main_picture']);
@@ -71,7 +74,7 @@ class ProductsController extends Controller
             ]
         );
 
-        if(!$request->hasFile('main_picture')) {
+        if (!$request->hasFile('main_picture')) {
             return response()->json(['upload_file_not_found main_picture'], 400);
         }
 
@@ -100,33 +103,33 @@ class ProductsController extends Controller
                 $errors = $validator->errors()->first();
                 return $this->returnError($errors, 400);
             }
-    
-            if(!$request->hasFile('images')) {
+
+            if (!$request->hasFile('images')) {
                 return response()->json(['upload_file_not_found'], 400);
             }
-    
-            $allowedfileExtension=['jpg','png'];
-            $files = $request->file('images'); 
+
+            $allowedfileExtension = ['jpg', 'png'];
+            $files = $request->file('images');
             $errors = [];
 
-            foreach ($files as $file) {      
-    
-                if($file->isValid()){
-                $extension = $file->getClientOriginalExtension();
-         
-                $check = in_array($extension,$allowedfileExtension);
-         
-                if($check) {
+            foreach ($files as $file) {
+
+                if ($file->isValid()) {
+                    $extension = $file->getClientOriginalExtension();
+
+                    $check = in_array($extension, $allowedfileExtension);
+
+                    if ($check) {
                         $path = $file->store('public/products');
                         $name = $file->getClientOriginalName();
-            
+
                         $Files = new ProductFiles();
                         $Files->product_id = $product->id;
                         $Files->title = $this->uploadImage($file, '/products/');
                         $Files->path = $path;
                         $Files->save();
                     }
-                } 
+                }
             }
 
             DB::commit();
@@ -154,7 +157,7 @@ class ProductsController extends Controller
         $product = Products::find($id);
         if ($product) {
             $productFiles = ProductFiles::where('product_id', '=', $product->id)->get();
-            
+
             foreach ($productFiles as &$value) {
                 $value['image'] =  url($value['title']);
             }

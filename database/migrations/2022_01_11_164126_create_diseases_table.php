@@ -14,8 +14,16 @@ class CreateDiseasesTable extends Migration
     public function up()
     {
         Schema::create('diseases', function (Blueprint $table) {
-            $table->id();
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('title');
+            $table->string('shot_detail');
+            $table->mediumText('detail');
+            $table->string('create_by', 100)->charset('utf8')->nullable();
+            $table->string('update_by', 100)->charset('utf8')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
